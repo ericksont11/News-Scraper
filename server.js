@@ -7,7 +7,7 @@ require('dotenv').config()
 
 const db = require("./models");
 
-const PORT = 3003;
+var PORT = process.env.PORT || 3000
 
 const app = express();
 
