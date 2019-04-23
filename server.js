@@ -3,13 +3,10 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const cheerio = require("cheerio");
 var exphbs  = require('express-handlebars');
-require('dotenv').config()
-
 const db = require("./models");
-
-var PORT = process.env.PORT || 3000
-
+const PORT = process.env.PORT || 3000
 const app = express();
+require('dotenv').config()
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -25,7 +22,9 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.get("/scrape", (req, res) => {
 
-  axios.get("https://www.npr.org/sections/news").then(response => {
+    db.Article.collection.drop()
+    
+    axios.get("https://www.npr.org/sections/news").then(response => {
 
     const $ = cheerio.load(response.data);
 
@@ -66,6 +65,29 @@ app.get("/articles", (req, res) => {
     });
 });
 
+app.get("/articles/:id", (req, res) => {
+  db.Article.findOne({ _id: req.params.id })
+    .populate("note")
+    .then(dbArticle => {
+      res.json(dbArticle);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
+app.post("/articles/:id", (req, res) => {
+  db.Note.create(req.body)
+    .then(dbNote => {
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+    })
+    .then(dbArticle => {
+      res.json(dbArticle);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);

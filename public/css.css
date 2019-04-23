@@ -2,3 +2,9 @@ img {
     width: 15vw !important;
     height: 100% !important
 }
+
+#notes {
+    width: 90vw;
+    height: 20vh;
+    background-color: blue
+}
