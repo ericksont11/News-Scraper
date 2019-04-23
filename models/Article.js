@@ -13,7 +13,6 @@ const ArticleSchema = new Schema({
   },
   img: {
     type: String,
-    required: true
   },
   link: {
     type: String,
