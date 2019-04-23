@@ -1,0 +1,27 @@
+{
+  "name": "nyt-scraper",
+  "version": "1.0.0",
+  "description": "## Description  * An application that uses MongoDB as a database to store articles from a web scrape of the NYT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericksont11/nyt-scraper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericksont11/nyt-scraper/issues"
+  },
+  "homepage": "https://github.com/ericksont11/nyt-scraper#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.3",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "mongoose": "^5.5.3"
+  }
+}
