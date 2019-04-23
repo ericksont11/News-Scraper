@@ -22,7 +22,6 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.get("/scrape", (req, res) => {
 
-    db.Article.collection.drop()
     
     axios.get("https://www.npr.org/sections/news").then(response => {
 
@@ -36,15 +35,22 @@ app.get("/scrape", (req, res) => {
         result.teaser = $(element).find("div.item-info-wrap").find("div.item-info").find("p.teaser").find("a").text();
         result.img = $(element).find("div.item-image").find("div.imagewrap").find("a").find("img").attr("src");
 
-        db.Article.create(result)
-            .then(dbArticle => {
 
-            console.log(dbArticle);
-            })
-            .catch(err => {
+        db.Article.findOne({ link: result.link })
+                .then(dbArticle => {
+                    if (!dbArticle) { 
+                        db.Article.create(result)
+                        .then(dbArticle => {
 
-            console.log(err);
-        });
+                        console.log(dbArticle);
+                        })
+                        .catch(err => {
+
+                        console.log(err);
+                    });
+                    }
+                })
+        
     });
     res.send("Scraping Complete");
   });

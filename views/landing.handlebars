@@ -1,11 +1,30 @@
 {{> header}}
 
-<div id="notes">
-    <p id="titleinput"></p>
-    <p id="bodyinput"></p>
-</div>
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <ul class="collection" id="notes">
+          <li id="notetitle" class="collection-item">User commented: </li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close btn waves-effect waves-red red">Go back to browsing</a>
+    </div>
+  </div>
 
-<button id="btn" class="btn">Load Articles</button>
+  
+  <div class="row loading-screen">
+    <div class="col s12 m8 offset-m2 l4 offset-l4">
+      <div class="card loading articles">
+        <div class="card-image center">
+          <img src="/1200px-National_Public_Radio_logo.svg.png" class="img">
+        </div>
+        <div class="card-content">
+          <button id="btn" class="btn">Click here to view articles</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <div id="wrapper">
     <div class=container>
         <div id="articles"></div>

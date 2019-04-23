@@ -1,79 +1,103 @@
 
 $(document).ready(function(){
 
-  $("#btn").click( ()=> {
+  let splitterArray = []
+
+  $('.modal').modal();
+
+  $(document).on("click", ".delete-comment", function() {
+    const button = $(this).attr("id")
+    console.log(button)
+    $(button).hide()
+  })
+
+  $("#btn").click(function() {
+    $(".loading-screen").hide()
     $.getJSON("/articles", data => {
       for (let i = 0; i < data.length; i++) {
-        $("#articles").append("<div class='col s12 m7 articles' id="+data[i]._id+"><h5 class='header' id="+data[i]._id+">"
+        $("#articles").append("<div class='col s10 offset-1 articles' id="+data[i]._id+"><h5 class='header' id="+data[i]._id+">"
         +data[i].title+"</h5><div class='card horizontal'><div class='card-image'><img src="
-        +data[i].img+"></div><div class='card-stacked'><div class='card-content'><p>"
+        +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
         +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
-        +data[i].link+"</a></div></div></div></div>");
+        +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
       }
     });
   })
 
-  $(document).on("click", "h5", function() {
-    // Empty the notes from the note section
-    console.log("hello")
+
+  $(document).on("click", ".modal-trigger", function() {
     $("#notes").empty();
-    // Save the id from the p tag
+    splitterArray = []
     const thisId = $(this).attr("id");
-  
-    // Now make an ajax call for the Article
+
     $.ajax({
       method: "GET",
       url: "/articles/" + thisId
     })
-      // With that done, add the note information to the page
       .then(data => {
-        console.log(data);
-        // The title of the article
-        $("#notes").append("<h2>" + data.title + "</h2>");
-        // An input to enter a new title
-        $("#notes").append("<input id='titleinput' name='title' >");
-        // A textarea to add a new note body
-        $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-        // A button to submit a new note, with the id of the article saved to it
-        $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+        $("#notes").append("<input id='titleinput' name='title' placeholder='Type your comments here!'>");
+        $("#notes").append("<h6 id='notetitle'></h6>");
+        $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-id="+data._id+">Leave a comment</a>");
   
-        // If there's a note in the article
         if (data.note) {
-          // Place the title of the note in the title input
-          $("#titleinput").val(data.note.title);
-          // Place the body of the note in the body textarea
-          $("#bodyinput").val(data.note.body);
+          splitter= (data.note.title).split("|")
+          console.log(splitter)
+          for (i=0; i < splitter.length; i++){
+            $("#notetitle").prepend("<li class='collection-item'> User commented: "+splitter[i]+"<button id='button'"+data._id+" class='delete-comment'>X</button></li>");
+            splitterArray.push(splitter[i])
+          }
+          console.log(splitterArray.join("|"))
         }
       });
   });
-  
-  // When you click the savenote button
+
   $(document).on("click", "#savenote", function() {
-    // Grab the id associated with the article from the submit button
     const thisId = $(this).attr("data-id");
-  
-    // Run a POST request to change the note, using what's entered in the inputs
-    $.ajax({
-      method: "POST",
-      url: "/articles/" + thisId,
-      data: {
-        // Value taken from title input
-        title: $("#titleinput").val(),
-        // Value taken from note textarea
-        body: $("#bodyinput").val()
+    console.log(splitterArray.length)
+    if ($("#titleinput").val() !== "") {
+      if (splitterArray.length >= 1) {
+        var title = splitterArray.join("|") + "|" + $("#titleinput").val()
       }
-    })
-      // With that done
-      .then(data => {
-        // Log the response
-        console.log(data);
-        // Empty the notes section
-        $("#notes").empty();
-      });
-  
-    // Also, remove the values entered in the input and textarea for note entry
-    $("#titleinput").val("");
-    $("#bodyinput").val("");
+      else {
+        var title = $("#titleinput").val()
+      }
+
+      $.ajax({
+        method: "POST",
+        url: "/articles/" + thisId,
+        data: {
+          title,
+        }
+      })
+
+        .then(data => {
+          $("#notes").empty();
+          splitterArray=[]
+          $.ajax({
+            method: "GET",
+            url: "/articles/" + thisId
+          })
+            .then(data => {
+              console.log(data)
+              $("#notes").append("<input id='titleinput' name='title' placeholder='Type your comment here!'>");
+              $("#notes").append("<h6 id='notetitle'></h6>");
+              $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-id="+data._id+">Leave a comment</a>");
+        
+              if (data.note) {
+                splitter= (data.note.title).split("|")
+                console.log(splitter)
+                for (i=0; i < splitter.length; i++){
+                  $("#notetitle").prepend("<li class='collection-item'>User commented: "+splitter[i]+"<button id='button'"+data._id+" class='delete-comment'>X</button></li>");
+                  splitterArray.push(splitter[i])
+                }
+                console.log(splitterArray.join("|"))
+              }
+            });
+        });
+    
+      $("#titleinput").val("");
+      $("#bodyinput").val("");
+    }
   });
 
 })
