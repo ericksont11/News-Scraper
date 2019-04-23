@@ -8,7 +8,7 @@ $(document).ready(function(){
   $(document).on("click", ".delete-comment", function() {
     const button = $(this).attr("id")
     console.log(button)
-    $(button).hide()
+    $("#link"+button).hide()
   })
 
   $("#btn").click(function() {
@@ -41,19 +41,17 @@ $(document).ready(function(){
   
         if (data.note) {
           splitter= (data.note.title).split("|")
-          console.log(splitter)
           for (i=0; i < splitter.length; i++){
-            $("#notetitle").prepend("<li class='collection-item'> User commented: "+splitter[i]+"<button id='button'"+data._id+" class='delete-comment'>X</button></li>");
+            $("#notetitle").prepend("<li class='collection-item' id='link"+splitter[i]+"'> User commented: "+splitter[i]+"<button id='"+splitter[i]+"' class='delete-comment'>X</button></li>");
             splitterArray.push(splitter[i])
           }
-          console.log(splitterArray.join("|"))
+          console.log(data.note)
         }
       });
   });
 
   $(document).on("click", "#savenote", function() {
     const thisId = $(this).attr("data-id");
-    console.log(splitterArray.length)
     if ($("#titleinput").val() !== "") {
       if (splitterArray.length >= 1) {
         var title = splitterArray.join("|") + "|" + $("#titleinput").val()
@@ -87,7 +85,7 @@ $(document).ready(function(){
                 splitter= (data.note.title).split("|")
                 console.log(splitter)
                 for (i=0; i < splitter.length; i++){
-                  $("#notetitle").prepend("<li class='collection-item'>User commented: "+splitter[i]+"<button id='button'"+data._id+" class='delete-comment'>X</button></li>");
+                  $("#notetitle").prepend("<li class='collection-item id='link"+data.note._id+"'>User commented: "+splitter[i]+"<button id='"+data.note._id+"' class='delete-comment'>X</button></li>");
                   splitterArray.push(splitter[i])
                 }
                 console.log(splitterArray.join("|"))
