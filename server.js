@@ -78,8 +78,37 @@ app.get("/articles/:id", (req, res) => {
     });
 });
 
-app.post("/hello", (req, res) => {
-  mongoose.connection.db.dropCollection('notes', function(err, result) {});
+app.post("/delete/:id", (req, res) => {
+  db.Note.find({ _id: req.params.id }).remove()
+  .then(dbArticle => {
+    res.json(dbArticle);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
+
+app.put("/update/:id", (req, res) => {
+  if (res.req.body.title == "") {
+    console.log("yes")
+    db.Note.update({ _id: req.params.id }, {$set: {title: "This is the beginning of the comments!"}})
+    .then(dbArticle => {
+      res.json(dbArticle);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+  }
+  else {
+    console.log("no")
+    db.Note.update({ _id: req.params.id }, {$set: {title: res.req.body.title}})
+    .then(dbArticle => {
+      res.json(dbArticle);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+  }
 });
 
 app.post("/articles/:id", (req, res) => {

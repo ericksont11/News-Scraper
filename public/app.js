@@ -6,30 +6,32 @@ $(document).ready(function(){
   $('.modal').modal();
 
   $(document).on("click", ".delete-comment", function() {
+    let title = []
     const button = $(this).attr("data-id")
-    const num =  $(this).attr("data-num")
+    const noteId =  $(this).attr("data-idnum")
+    const dataArticle =  $(this).attr("data-article")
     $("#"+button).remove()
-    console.log(splitterArray)
-    splitterArray.splice(num, 1);
-    console.log(splitterArray)
+    $(".collection-item").each(function() {
+      let string = ($(this).text()).substring(16)
+      string = string.substring(0, string.length-1)
+      console.log(string)
+      title.push(string)
+    });
+    title = title.join("|")
+    console.log(title)
 
-
-    var title = splitterArray.join("|") +
 
     $.ajax({
-      url: '/hello',
-      type: 'POST',
-      }).then(()=>{
-        console.log(title)
-        $.ajax({
-          method: "POST",
-          url: "/articles/" + num,
-          data: {
-            title,
-          }
-        })
+      url: '/update/'+noteId,
+      type: 'PUT',
+      data: {
+        title,
+      }
+      }).then(data=>{
+
       })
-  })
+
+})
 
   $("#btn").click(function() {
     $(".loading-screen").hide()
@@ -56,14 +58,15 @@ $(document).ready(function(){
       .then(data => {
         $("#notes").append("<input id='titleinput' name='title' placeholder='Type your comments here!'>");
         $("#notes").append("<h6 id='notetitle'></h6>");
-        $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-id="+data._id+">Leave a comment</a>");
+        $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-id="+thisId+">Leave a comment</a>");
   
         if (data.note) {
+          $("#savenote").attr("data-note", data.note._id)
           splitter = (data.note.title).split("|")
-          for (i=0; i < (splitter.length+1); i++){
-              $("#notetitle").prepend("<li class='collection-item' id='link"+splitter[i].split(" ").join("")
-              +"'> User commented: "+splitter[i]+"<button data-id='link"+splitter[i].split(" ").join("")
-              +"' class='delete-comment' data-num='"+i+"' data-id='"+data._id+"'>X</button></li>");
+          for (i=0; i < (splitter.length); i++){
+              $("#notetitle").prepend("<li class='collection-item' id='link"+i
+              +"'> User commented: "+splitter[i]+"<button data-id='link"+i
+              +"' class='delete-comment' data-article="+data._id+" data-num='"+i+"' data-idnum='"+data.note._id+"'>X</button></li>");
               splitterArray.push(splitter[i])
           }
         }
@@ -72,14 +75,21 @@ $(document).ready(function(){
 
   $(document).on("click", "#savenote", function() {
     const thisId = $(this).attr("data-id");
+    const noteId = $(this).attr("data-note");
     if ($("#titleinput").val() !== "") {
       if (splitterArray.length >= 1) {
-        var title = splitterArray.join("|") + "|" + $("#titleinput").val()
+        var title = splitterArray.join("|") + "|" + $("#titleinput").val().trim()
       }
       else {
-        var title = $("#titleinput").val()
+        var title = $("#titleinput").val().trim()
       }
+      $.ajax({
+        url: '/delete/'+noteId,
+        type: 'post',
+        }).then(data=>{
 
+
+        
       $.ajax({
         method: "POST",
         url: "/articles/" + thisId,
@@ -88,7 +98,7 @@ $(document).ready(function(){
         }
       })
 
-        .then(data => {
+        .then(() => {
           $("#notes").empty();
           splitterArray=[]
           $.ajax({
@@ -96,22 +106,23 @@ $(document).ready(function(){
             url: "/articles/" + thisId
           })
             .then(data => {
+
               $("#notes").append("<input id='titleinput' name='title' placeholder='Type your comment here!'>");
               $("#notes").append("<h6 id='notetitle'></h6>");
-              $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-id="+data._id+">Leave a comment</a>");
+              $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-note="+data.note._id+" data-id="+data._id+">Leave a comment</a>");
         
               if (data.note) {
                 splitter= (data.note.title).split("|")
                 for (i=0; i < splitter.length; i++){
-                  $("#notetitle").prepend("<li class='collection-item' id='link"+splitter[i].split(" ").join("").trim()
-                  +"'>User commented: "+splitter[i]+"<button data-id='link"+splitter[i].split(" ").join("").trim()
-                  +"' class='delete-comment' data-num='"+i+"'>X</button></li>");
+                  $("#notetitle").prepend("<li class='collection-item' id='link"+i
+                  +"'>User commented: "+splitter[i]+"<button data-id='link"+i
+                  +"' class='delete-comment' data-article="+data._id+" data-num='"+i+"' data-idnum='"+data.note._id+"'>X</button></li>");
                   splitterArray.push(splitter[i])
                 }
               }
             });
         });
-    
+      })
       $("#titleinput").val("");
       $("#bodyinput").val("");
     }
