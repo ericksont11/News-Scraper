@@ -6,9 +6,29 @@ $(document).ready(function(){
   $('.modal').modal();
 
   $(document).on("click", ".delete-comment", function() {
-    const button = $(this).attr("id")
-    console.log(button)
-    $("#link"+button).hide()
+    const button = $(this).attr("data-id")
+    const num =  $(this).attr("data-num")
+    $("#"+button).remove()
+    console.log(splitterArray)
+    splitterArray.splice(num, 1);
+    console.log(splitterArray)
+
+
+    var title = splitterArray.join("|") +
+
+    $.ajax({
+      url: '/hello',
+      type: 'POST',
+      }).then(()=>{
+        console.log(title)
+        $.ajax({
+          method: "POST",
+          url: "/articles/" + num,
+          data: {
+            title,
+          }
+        })
+      })
   })
 
   $("#btn").click(function() {
@@ -23,7 +43,6 @@ $(document).ready(function(){
       }
     });
   })
-
 
   $(document).on("click", ".modal-trigger", function() {
     $("#notes").empty();
@@ -40,12 +59,13 @@ $(document).ready(function(){
         $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-id="+data._id+">Leave a comment</a>");
   
         if (data.note) {
-          splitter= (data.note.title).split("|")
-          for (i=0; i < splitter.length; i++){
-            $("#notetitle").prepend("<li class='collection-item' id='link"+splitter[i]+"'> User commented: "+splitter[i]+"<button id='"+splitter[i]+"' class='delete-comment'>X</button></li>");
-            splitterArray.push(splitter[i])
+          splitter = (data.note.title).split("|")
+          for (i=0; i < (splitter.length+1); i++){
+              $("#notetitle").prepend("<li class='collection-item' id='link"+splitter[i].split(" ").join("")
+              +"'> User commented: "+splitter[i]+"<button data-id='link"+splitter[i].split(" ").join("")
+              +"' class='delete-comment' data-num='"+i+"' data-id='"+data._id+"'>X</button></li>");
+              splitterArray.push(splitter[i])
           }
-          console.log(data.note)
         }
       });
   });
@@ -76,19 +96,18 @@ $(document).ready(function(){
             url: "/articles/" + thisId
           })
             .then(data => {
-              console.log(data)
               $("#notes").append("<input id='titleinput' name='title' placeholder='Type your comment here!'>");
               $("#notes").append("<h6 id='notetitle'></h6>");
               $("#notes").append("<a class='waves-effect waves-light btn' id='savenote' data-id="+data._id+">Leave a comment</a>");
         
               if (data.note) {
                 splitter= (data.note.title).split("|")
-                console.log(splitter)
                 for (i=0; i < splitter.length; i++){
-                  $("#notetitle").prepend("<li class='collection-item id='link"+data.note._id+"'>User commented: "+splitter[i]+"<button id='"+data.note._id+"' class='delete-comment'>X</button></li>");
+                  $("#notetitle").prepend("<li class='collection-item' id='link"+splitter[i].split(" ").join("").trim()
+                  +"'>User commented: "+splitter[i]+"<button data-id='link"+splitter[i].split(" ").join("").trim()
+                  +"' class='delete-comment' data-num='"+i+"'>X</button></li>");
                   splitterArray.push(splitter[i])
                 }
-                console.log(splitterArray.join("|"))
               }
             });
         });

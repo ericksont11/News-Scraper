@@ -47,3 +47,8 @@ h5 {
 .comments {
     width:100%;
 }
+
+.delete-comment{
+    position: relative;
+    left: 10%
+}

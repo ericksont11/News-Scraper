@@ -4,7 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 var exphbs  = require('express-handlebars');
 const db = require("./models");
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8000
 const app = express();
 require('dotenv').config()
 
@@ -20,9 +20,8 @@ var MONGODB_URI = process.env.MONGODB_URI
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
-app.get("/scrape", (req, res) => {
+app.get("/", (req, res) => {
 
-    
     axios.get("https://www.npr.org/sections/news").then(response => {
 
     const $ = cheerio.load(response.data);
@@ -52,14 +51,11 @@ app.get("/scrape", (req, res) => {
                 })
         
     });
-    res.send("Scraping Complete");
+    res.render('landing');
   });
 }); 
 
 
-app.get('/', function (req, res) {
-    res.render('landing');
-});
 
 app.get("/articles", (req, res) => {
     db.Article.find({})
@@ -80,6 +76,10 @@ app.get("/articles/:id", (req, res) => {
     .catch(err => {
       res.json(err);
     });
+});
+
+app.post("/hello", (req, res) => {
+  mongoose.connection.db.dropCollection('notes', function(err, result) {});
 });
 
 app.post("/articles/:id", (req, res) => {
