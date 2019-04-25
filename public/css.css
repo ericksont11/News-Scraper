@@ -6,7 +6,8 @@
 }
 
 .card {
-    border-radius: 5%;
+    border-radius: 4%;
+    height: 75vh;
     background: -webkit-linear-gradient(top, #1565C0 0%,#1565C0 20%,white 21%,white 100%);
 }
 
@@ -26,7 +27,8 @@
 
 #btn {
     width: 80%;
-    margin-left: 10%
+    margin-left: 10%;
+    margin-top:5vh
 }
 
 body {
@@ -43,8 +45,8 @@ body {
     margin-bottom: 7vh
 }
 
-h5 {
-    padding: 1vh;
+.card-header {
+    padding: 3vh;
     color: white;
     text-align: center;
     overflow: hidden
@@ -56,7 +58,7 @@ p, a {
 
 .loading {
     height: 41vh;
-    background-color: whitesmoke
+    background: -webkit-linear-gradient(top, #1565C0 0%,#1565C0 60%,white 60.1%,white 100%);
 }
 
 

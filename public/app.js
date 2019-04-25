@@ -5,6 +5,9 @@ $(document).ready(function(){
   let counter = 0
 
   $('.modal').modal();
+  $("#next").hide()
+  $("#previous").hide()
+
 
   $(document).on("click", ".delete-comment", function() {
     let title = []
@@ -30,14 +33,15 @@ $(document).ready(function(){
       }).then(data=>{
 
       })
-
 })
 
   $("#btn").click(function() {
+    $("#next").show()
+    $("#previous").show()
     $(".loading-screen").hide()
     $.getJSON("/articles", data => {
       for (let i = counter; i < (counter+10); i++) {
-        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header' id="+data[i]._id+">"
+        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
         +data[i].title+"</h5><div class='card-image'><img src="
         +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
         +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
@@ -52,7 +56,7 @@ $(document).ready(function(){
     $(".loading-screen").hide()
     $.getJSON("/articles", data => {
       for (let i = counter; i < (counter+10); i++) {
-        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header' id="+data[i]._id+">"
+        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
         +data[i].title+"</h5><div class='card-image'><img src="
         +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
         +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
@@ -67,7 +71,8 @@ $(document).ready(function(){
     $(".loading-screen").hide()
     $.getJSON("/articles", data => {
       for (let i = counter; i < (counter+10); i++) {
-        $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+"><div class='card'><h5 class='header' id="+data[i]._id+">"
+        $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
+        "><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
         +data[i].title+"</h5><div class='card-image'><img src="
         +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
         +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
