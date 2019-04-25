@@ -7,6 +7,8 @@ $(document).ready(function(){
   $('.modal').modal();
   $("#next").hide()
   $("#previous").hide()
+  $("#next2").hide()
+  $("#previous2").hide()
 
 
   $(document).on("click", ".delete-comment", function() {
@@ -39,9 +41,67 @@ $(document).ready(function(){
     $("#next").show()
     $("#previous").show()
     $(".loading-screen").hide()
-    $.getJSON("/articles", data => {
-      for (let i = counter; i < (counter+10); i++) {
+    $.getJSON("/npr", data => {
+      console.log(data.length)
+      console.log(data.length-10)
+      for (let i = (data.length-1); i > (data.length-11); i--) {
         $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
+        +data[i].title+"</h5><div class='card-image'><img src="
+        +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+        +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+        +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+      }
+    });
+
+  })
+
+  $(".npr-tab").click(function() {
+    $("#articles").empty()
+    counter = 0
+    $("#next").show()
+    $("#previous").show()
+    $("#next2").hide()
+    $("#previous2").hide()
+    $(".loading-screen").hide()
+    $.getJSON("/npr", data => {
+      for (let i = (data.length-1); i > (data.length-11); i--) {
+        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
+        +data[i].title+"</h5><div class='card-image'><img src="
+        +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+        +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+        +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+      }
+    });
+  })
+
+  $("#btn2").click(function() {
+    $("#next2").show()
+    $("#previous2").show()
+    $(".loading-screen").hide()
+    $.getJSON("/undefeated", data => {
+      for (let i = (data.length-1); i > (data.length-11); i--) {
+        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card undefeated-card'><h5 class='undefeated-header header card-header' id="+data[i]._id+">"
+        +data[i].title+"</h5><div class='card-image'><img src="
+        +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+        +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+        +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+      }
+    });
+  })
+
+  $(".undefeated-tab").click(function() {
+    $("#articles").empty()
+    counter = 0
+    $("#next2").show()
+    $("#previous2").show()
+    $("#next").hide()
+    $("#previous").hide()
+    $(".loading-screen").hide()
+    $.getJSON("/undefeated", data => {
+      console.log(data.length)
+      console.log(data.length-10)
+      for (let i = (data.length-1); i > (data.length-11); i--) {
+        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card undefeated-card'><h5 class='header undefeated-header card-header' id="+data[i]._id+">"
         +data[i].title+"</h5><div class='card-image'><img src="
         +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
         +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
@@ -51,32 +111,105 @@ $(document).ready(function(){
   })
 
   $("#next").click(function() {
-    counter = counter + 10
     $("#articles").empty()
-    $(".loading-screen").hide()
-    $.getJSON("/articles", data => {
-      for (let i = counter; i < (counter+10); i++) {
-        $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
-        +data[i].title+"</h5><div class='card-image'><img src="
-        +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
-        +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
-        +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+    $.getJSON("/npr", data => {
+      if (counter < data.length-10) {
+        counter = counter + 10
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
+      } else  {
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
+          "><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
+      }
+    });
+  })
+
+  $("#next2").click(function() {
+    $("#articles").empty()
+    $.getJSON("/undefeated", data => {
+      if (counter < data.length-10) {
+        counter = counter + 10
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 articles' id="+data[i]._id+"><div class='undefeated-card card'><h5 class='undefeated-header header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
+      } else  {
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
+          "><div class='undefeated-card card'><h5 class='undefeated-header header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
       }
     });
   })
 
   $("#previous").click(function() {
-    counter = counter -10
     $("#articles").empty()
-    $(".loading-screen").hide()
-    $.getJSON("/articles", data => {
-      for (let i = counter; i < (counter+10); i++) {
-        $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
-        "><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
-        +data[i].title+"</h5><div class='card-image'><img src="
-        +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
-        +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
-        +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+    $.getJSON("/npr", data => {
+      console.log(counter)
+      if (counter > 0) {
+          counter = counter - 10
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
+          "><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
+      } else if (counter === 0) {
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
+          "><div class='card'><h5 class='header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
+      }
+    });
+  })
+
+  $("#previous2").click(function() {
+    $("#articles").empty()
+    $.getJSON("/undefeated", data => {
+      console.log(counter)
+      if (counter > 0) {
+          counter = counter - 10
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
+          "><div class='undefeated-card card'><h5 class='undefeated-header header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
+      } else if (counter === 0) {
+        for (let i = (data.length-1-counter); i > (data.length-11-counter); i--) {
+          $("#articles").append("<div class='col l6 m8 s10 offset-m2 offset-s1 articles' id="+data[i]._id+
+          "><div class='undefeated-card card'><h5 class='undefeated-header header card-header' id="+data[i]._id+">"
+          +data[i].title+"</h5><div class='card-image'><img src="
+          +data[i].img+" class='caption-image'></div><div class='card-stacked'><div class='card-content'><p>"
+          +data[i].teaser+"</p></div><div class='card-action'><a href="+data[i].link+">"
+          +data[i].link+"<a class='waves-effect waves-light btn modal-trigger comments' id="+data[i]._id+" href='#modal1'>View Comments</a></a></div></div></div></div>");
+        }
       }
     });
   })
@@ -106,6 +239,7 @@ $(document).ready(function(){
           }
         }
       });
+
   });
 
   $(document).on("click", "#savenote", function() {

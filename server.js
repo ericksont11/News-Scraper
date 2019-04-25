@@ -36,29 +36,68 @@ app.get("/", (req, res) => {
 
 
         db.Article.findOne({ link: result.link })
+        .then(dbArticle => {
+            if (!dbArticle) { 
+                db.Article.create(result)
                 .then(dbArticle => {
-                    if (!dbArticle) { 
-                        db.Article.create(result)
-                        .then(dbArticle => {
 
-                        console.log(dbArticle);
-                        })
-                        .catch(err => {
-
-                        console.log(err);
-                    });
-                    }
+                console.log(dbArticle);
                 })
-        
-    });
-    res.render('landing');
-  });
-}); 
+                .catch(err => {
+
+                console.log(err);
+            });
+            }
+        })
+
+    }); 
+  }).then(()=>{
+    axios.get("https://theundefeated.com/").then(response => {
+
+    const $ = cheerio.load(response.data);
+
+    $("section.panel").each((i, element) => {
+      const result = {};
+        result.link = $(element).find("a.image").attr("href");
+        result.img = $(element).find("a.image").find("img").attr("src");
+        result.title = $(element).find("a.link").find("h2").text();
+        result.teaser = $(element).find("a.link").find("p").text();
+
+        db.Undefeated.findOne({ link: result.link })
+        .then(dbUndefeated=> {
+            if (!dbUndefeated ) { 
+              db.Undefeated.create(result)
+                .then(dbUndefeated  => {
+
+                console.log(dbUndefeated);
+                })
+                .catch(err => {
+
+                console.log(err);
+            });
+            }
+        })
+
+    })
+  })
+  }).catch({})
+  res.render('landing')
+})
 
 
 
-app.get("/articles", (req, res) => {
+app.get("/npr", (req, res) => {
     db.Article.find({})
+        .then(dbArticle => {
+        res.json(dbArticle);
+        })
+        .catch(err => {
+        res.json(err);
+    });
+});
+
+app.get("/undefeated", (req, res) => {
+    db.Undefeated.find({})
         .then(dbArticle => {
         res.json(dbArticle);
         })
