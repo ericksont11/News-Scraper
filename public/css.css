@@ -1,9 +1,23 @@
-.caption-image {
-    width: 25vw !important;
-    height: 100% !important
+.card-image img {
+    height: 20vh!important;
+    width: 60%!important;
+    margin-left:20% !important;
+    padding-top:5% !important
 }
 
+.card {
+    border-radius: 5%;
+    background: -webkit-linear-gradient(top, #1565C0 0%,#1565C0 20%,white 21%,white 100%);
+}
 
+.modal {
+    background: -webkit-linear-gradient(top, #1565C0 0%,#1565C0 25%,white 25%,white 100%);
+    padding: 0
+}
+
+.comments {
+    margin-bottom: 10vh;
+}
 
 #savenote {
     width: 40%;
@@ -30,8 +44,14 @@ body {
 }
 
 h5 {
+    padding: 1vh;
     color: white;
-    text-align: center
+    text-align: center;
+    overflow: hidden
+}
+
+p, a {
+    font-size: .85em !important
 }
 
 .loading {
@@ -39,10 +59,6 @@ h5 {
     background-color: whitesmoke
 }
 
-.img {
-    width: 100%;
-    height: 20vh
-}
 
 .comments {
     width:100%;
@@ -51,4 +67,24 @@ h5 {
 .delete-comment{
     position: relative;
     left: 10%
+}
+
+.tab {
+    background-color: green;
+    width:50vw
+}
+
+.btn {
+    background-color: #1565C0
+}
+
+#previous,
+#next {
+    display: inline-block;
+    width:50vw;
+    margin-left: 25vw;
+}
+
+#next {
+    margin-bottom: 5vw
 }
